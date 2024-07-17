@@ -1,14 +1,5 @@
-//
-//  Question+CoreDataProperties.swift
-//  helth_survey
-//
-//  Created by 杉山新 on 2024/07/17.
-//
-//
-
 import Foundation
 import CoreData
-
 
 extension Question {
 
@@ -22,7 +13,6 @@ extension Question {
     @NSManaged public var text: String?
     @NSManaged public var answers: NSSet?
     @NSManaged public var options: NSSet?
-
 }
 
 // MARK: Generated accessors for answers
@@ -39,7 +29,6 @@ extension Question {
 
     @objc(removeAnswers:)
     @NSManaged public func removeFromAnswers(_ values: NSSet)
-
 }
 
 // MARK: Generated accessors for options
@@ -57,8 +46,14 @@ extension Question {
     @objc(removeOptions:)
     @NSManaged public func removeFromOptions(_ values: NSSet)
 
+    public var optionsArray: [Option] {
+        let set = options as? Set<Option> ?? []
+        return set.sorted {
+            $0.text ?? "" < $1.text ?? ""
+        }
+    }
 }
 
-extension Question : Identifiable {
+extension Question: Identifiable {
 
 }

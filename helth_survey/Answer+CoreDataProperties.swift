@@ -1,14 +1,5 @@
-//
-//  Answer+CoreDataProperties.swift
-//  helth_survey
-//
-//  Created by 杉山新 on 2024/07/17.
-//
-//
-
 import Foundation
 import CoreData
-
 
 extension Answer {
 
@@ -23,9 +14,8 @@ extension Answer {
     @NSManaged public var question: Question?
     @NSManaged public var selectedOption: Option?
     @NSManaged public var student: Student?
-
 }
 
-extension Answer : Identifiable {
+extension Answer: Identifiable {
 
 }

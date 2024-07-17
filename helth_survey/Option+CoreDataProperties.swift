@@ -24,6 +24,22 @@ extension Option {
 
 }
 
+// MARK: Generated accessors for answers
+extension Option {
+    @objc(addAnswersObject:)
+    @NSManaged public func addToAnswers(_ value: Answer)
+
+    @objc(removeAnswersObject:)
+    @NSManaged public func removeFromAnswers(_ value: Answer)
+
+    @objc(addAnswers:)
+    @NSManaged public func addToAnswers(_ values: NSSet)
+
+    @objc(removeAnswers:)
+    @NSManaged public func removeFromAnswers(_ values: NSSet)
+}
+
+
 extension Option : Identifiable {
 
 }

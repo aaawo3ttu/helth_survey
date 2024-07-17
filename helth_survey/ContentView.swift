@@ -1,13 +1,14 @@
 import SwiftUI
 
-struct ContentView: View {
-    @State private var currentView: CurrentView = .introduction
+enum ViewType {
+    case introduction
+    case survey
+    case results(score: Int)
+    case admin
+}
 
-    enum CurrentView {
-        case introduction
-        case survey
-        case score(Int)
-    }
+struct ContentView: View {
+    @State private var currentView: ViewType = .introduction
 
     var body: some View {
         VStack {
@@ -16,8 +17,10 @@ struct ContentView: View {
                 IntroductionView(currentView: $currentView)
             case .survey:
                 SurveyView(currentView: $currentView)
-            case .score(let score):
-                ScoreView(score: score, currentView: $currentView)
+            case .results(let score):
+                ResultsView(currentView: $currentView, score: score)
+            case .admin:
+                AdminPanelView(currentView: $currentView)
             }
         }
     }

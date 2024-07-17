@@ -10,6 +10,8 @@
         <relationship name="student" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Student" inverseName="answers" inverseEntity="Student"/>
     </entity>
     <entity name="Option" representedClassName="Option" syncable="YES">
+        <attribute name="audioPath" optional="YES" attributeType="String"/>
+        <attribute name="imageURL" optional="YES" attributeType="String"/>
         <attribute name="optionID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="score" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="text" optional="YES" attributeType="String"/>

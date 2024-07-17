@@ -7,6 +7,7 @@ struct PersistenceController {
         let result = PersistenceController(inMemory: true)
         let viewContext = result.container.viewContext
 
+        // デモデータを追加する
         let newQuestion = Question(context: viewContext)
         newQuestion.questionID = UUID()
         newQuestion.text = "Sample Question"
@@ -26,6 +27,12 @@ struct PersistenceController {
         newQuestion.addToOptions(option1)
         newQuestion.addToOptions(option2)
 
+        let newAnswer = Answer(context: viewContext)
+        newAnswer.answerID = UUID()
+        newAnswer.question = newQuestion
+        newAnswer.selectedOption = option1
+        newAnswer.answerData = Date()
+
         do {
             try viewContext.save()
         } catch {
@@ -39,7 +46,7 @@ struct PersistenceController {
     let container: NSPersistentContainer
 
     init(inMemory: Bool = false) {
-        container = NSPersistentContainer(name: "helth_survey")
+        container = NSPersistentContainer(name: "helth_survey") // モデル名に変更してください
         if inMemory {
             container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
         }

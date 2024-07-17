@@ -1,8 +1,10 @@
 import SwiftUI
 
-struct ScoreView: View {
+struct ResultsView: View {
+    @Environment(\.managedObjectContext) private var viewContext
+    @FetchRequest(entity: Answer.entity(), sortDescriptors: []) private var answers: FetchedResults<Answer>
+    @Binding var currentView: ViewType
     var score: Int
-    @Binding var currentView: ContentView.CurrentView
 
     var body: some View {
         VStack {
@@ -27,12 +29,8 @@ struct ScoreView: View {
         }
         .padding()
     }
-}
 
-struct ScoreView_Previews: PreviewProvider {
-    @State static var currentView = ContentView.CurrentView.score(85)
-
-    static var previews: some View {
-        ScoreView(score: 85, currentView: $currentView)
+    private var totalScore: Int {
+        return answers.reduce(0) { $0 + Int($1.selectedOption?.score ?? 0) }
     }
 }

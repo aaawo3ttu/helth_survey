@@ -1,15 +1,12 @@
 import SwiftUI
 
 struct IntroductionView: View {
-    @Binding var currentView: ContentView.CurrentView
+    @Binding var currentView: ViewType
 
     var body: some View {
         VStack {
-            Text("Welcome to the Health Survey")
+            Text("Welcome to the Health Survey App")
                 .font(.largeTitle)
-                .padding()
-            
-            Text("Please follow the voice guidance to complete the survey.")
                 .padding()
             
             Button(action: {
@@ -22,15 +19,19 @@ struct IntroductionView: View {
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
+            .padding()
+            
+            Button(action: {
+                currentView = .admin
+            }) {
+                Text("Admin Panel")
+                    .font(.title)
+                    .padding()
+                    .background(Color.gray)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }
+            .padding()
         }
-        .padding()
-    }
-}
-
-struct IntroductionView_Previews: PreviewProvider {
-    @State static var currentView = ContentView.CurrentView.introduction
-
-    static var previews: some View {
-        IntroductionView(currentView: $currentView)
     }
 }

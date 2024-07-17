@@ -9,17 +9,22 @@
 /* Begin PBXBuildFile section */
 		5A4725CF2C47AECD00C86DDC /* IntroductionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4725CE2C47AECD00C86DDC /* IntroductionView.swift */; };
 		5A4725D12C47AF0F00C86DDC /* SurveyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4725D02C47AF0F00C86DDC /* SurveyView.swift */; };
-		5A4725D32C47AF3D00C86DDC /* ScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4725D22C47AF3D00C86DDC /* ScoreView.swift */; };
+		5A4725EC2C47ECD900C86DDC /* AdminPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4725EB2C47ECD900C86DDC /* AdminPanelView.swift */; };
+		5A4725EE2C47ECFB00C86DDC /* AddQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4725ED2C47ECFB00C86DDC /* AddQuestionView.swift */; };
+		5A4725F02C47ED0700C86DDC /* EditQuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4725EF2C47ED0700C86DDC /* EditQuestionView.swift */; };
+		5A4725F22C47ED3A00C86DDC /* AddOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4725F12C47ED3A00C86DDC /* AddOptionView.swift */; };
+		5A4725F42C47ED5500C86DDC /* EditOptionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4725F32C47ED5500C86DDC /* EditOptionView.swift */; };
+		5A4725F62C47ED9E00C86DDC /* AudioMnager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4725F52C47ED9E00C86DDC /* AudioMnager.swift */; };
+		5A4725FC2C47EF5B00C86DDC /* Option+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4725FB2C47EF5B00C86DDC /* Option+CoreDataProperties.swift */; };
+		5A4725FE2C47F2A200C86DDC /* ResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4725FD2C47F2A200C86DDC /* ResultView.swift */; };
+		5A4726002C48261000C86DDC /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4725FF2C48261000C86DDC /* ImagePicker.swift */; };
 		5ADC31012C47600200DD4669 /* helth_survey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADC31002C47600200DD4669 /* helth_survey.swift */; };
 		5ADC31032C47600200DD4669 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADC31022C47600200DD4669 /* Persistence.swift */; };
 		5ADC31062C47600200DD4669 /* helth_survey.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5ADC31042C47600200DD4669 /* helth_survey.xcdatamodeld */; };
 		5ADC31082C47600200DD4669 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADC31072C47600200DD4669 /* ContentView.swift */; };
 		5ADC310A2C47600400DD4669 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5ADC31092C47600400DD4669 /* Assets.xcassets */; };
 		5ADC310E2C47600400DD4669 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5ADC310D2C47600400DD4669 /* Preview Assets.xcassets */; };
-		5ADC31202C4775C000DD4669 /* QuestionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADC311F2C4775C000DD4669 /* QuestionViewModel.swift */; };
-		5ADC31222C47760900DD4669 /* QuestionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADC31212C47760900DD4669 /* QuestionView.swift */; };
 		5ADC31312C47817200DD4669 /* Option+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADC31272C47817200DD4669 /* Option+CoreDataClass.swift */; };
-		5ADC31322C47817200DD4669 /* Option+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADC31282C47817200DD4669 /* Option+CoreDataProperties.swift */; };
 		5ADC31332C47817200DD4669 /* Result+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADC31292C47817200DD4669 /* Result+CoreDataClass.swift */; };
 		5ADC31342C47817200DD4669 /* Result+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADC312A2C47817200DD4669 /* Result+CoreDataProperties.swift */; };
 		5ADC31352C47817200DD4669 /* Student+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADC312B2C47817200DD4669 /* Student+CoreDataClass.swift */; };
@@ -33,7 +38,15 @@
 /* Begin PBXFileReference section */
 		5A4725CE2C47AECD00C86DDC /* IntroductionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroductionView.swift; sourceTree = "<group>"; };
 		5A4725D02C47AF0F00C86DDC /* SurveyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyView.swift; sourceTree = "<group>"; };
-		5A4725D22C47AF3D00C86DDC /* ScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreView.swift; sourceTree = "<group>"; };
+		5A4725EB2C47ECD900C86DDC /* AdminPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AdminPanelView.swift; path = ../AdminPanelView.swift; sourceTree = "<group>"; };
+		5A4725ED2C47ECFB00C86DDC /* AddQuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddQuestionView.swift; path = ../AddQuestionView.swift; sourceTree = "<group>"; };
+		5A4725EF2C47ED0700C86DDC /* EditQuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EditQuestionView.swift; path = ../EditQuestionView.swift; sourceTree = "<group>"; };
+		5A4725F12C47ED3A00C86DDC /* AddOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddOptionView.swift; path = ../AddOptionView.swift; sourceTree = "<group>"; };
+		5A4725F32C47ED5500C86DDC /* EditOptionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = EditOptionView.swift; path = ../EditOptionView.swift; sourceTree = "<group>"; };
+		5A4725F52C47ED9E00C86DDC /* AudioMnager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioMnager.swift; sourceTree = "<group>"; };
+		5A4725FB2C47EF5B00C86DDC /* Option+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Option+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		5A4725FD2C47F2A200C86DDC /* ResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultView.swift; sourceTree = "<group>"; };
+		5A4725FF2C48261000C86DDC /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		5ADC30FD2C47600200DD4669 /* helth_survey.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = helth_survey.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5ADC31002C47600200DD4669 /* helth_survey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = helth_survey.swift; sourceTree = "<group>"; };
 		5ADC31022C47600200DD4669 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -42,10 +55,7 @@
 		5ADC31092C47600400DD4669 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5ADC310B2C47600400DD4669 /* helth_survey.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = helth_survey.entitlements; sourceTree = "<group>"; };
 		5ADC310D2C47600400DD4669 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		5ADC311F2C4775C000DD4669 /* QuestionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionViewModel.swift; sourceTree = "<group>"; };
-		5ADC31212C47760900DD4669 /* QuestionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionView.swift; sourceTree = "<group>"; };
 		5ADC31272C47817200DD4669 /* Option+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Option+CoreDataClass.swift"; sourceTree = "<group>"; };
-		5ADC31282C47817200DD4669 /* Option+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Option+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		5ADC31292C47817200DD4669 /* Result+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+CoreDataClass.swift"; sourceTree = "<group>"; };
 		5ADC312A2C47817200DD4669 /* Result+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Result+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		5ADC312B2C47817200DD4669 /* Student+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Student+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -87,7 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				5ADC31272C47817200DD4669 /* Option+CoreDataClass.swift */,
-				5ADC31282C47817200DD4669 /* Option+CoreDataProperties.swift */,
+				5A4725FB2C47EF5B00C86DDC /* Option+CoreDataProperties.swift */,
 				5ADC31292C47817200DD4669 /* Result+CoreDataClass.swift */,
 				5ADC312A2C47817200DD4669 /* Result+CoreDataProperties.swift */,
 				5ADC312B2C47817200DD4669 /* Student+CoreDataClass.swift */,
@@ -96,14 +106,19 @@
 				5ADC312E2C47817200DD4669 /* Question+CoreDataProperties.swift */,
 				5ADC312F2C47817200DD4669 /* Answer+CoreDataClass.swift */,
 				5ADC31302C47817200DD4669 /* Answer+CoreDataProperties.swift */,
-				5ADC31212C47760900DD4669 /* QuestionView.swift */,
 				5ADC31002C47600200DD4669 /* helth_survey.swift */,
 				5A4725CE2C47AECD00C86DDC /* IntroductionView.swift */,
 				5A4725D02C47AF0F00C86DDC /* SurveyView.swift */,
-				5A4725D22C47AF3D00C86DDC /* ScoreView.swift */,
+				5A4725FD2C47F2A200C86DDC /* ResultView.swift */,
 				5ADC31022C47600200DD4669 /* Persistence.swift */,
-				5ADC311F2C4775C000DD4669 /* QuestionViewModel.swift */,
+				5A4725EB2C47ECD900C86DDC /* AdminPanelView.swift */,
+				5A4725ED2C47ECFB00C86DDC /* AddQuestionView.swift */,
+				5A4725EF2C47ED0700C86DDC /* EditQuestionView.swift */,
+				5A4725F12C47ED3A00C86DDC /* AddOptionView.swift */,
+				5A4725F32C47ED5500C86DDC /* EditOptionView.swift */,
+				5A4725F52C47ED9E00C86DDC /* AudioMnager.swift */,
 				5ADC31072C47600200DD4669 /* ContentView.swift */,
+				5A4725FF2C48261000C86DDC /* ImagePicker.swift */,
 				5ADC31092C47600400DD4669 /* Assets.xcassets */,
 				5ADC310B2C47600400DD4669 /* helth_survey.entitlements */,
 				5ADC31042C47600200DD4669 /* helth_survey.xcdatamodeld */,
@@ -191,23 +206,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				5ADC31312C47817200DD4669 /* Option+CoreDataClass.swift in Sources */,
-				5ADC31322C47817200DD4669 /* Option+CoreDataProperties.swift in Sources */,
+				5A4725F02C47ED0700C86DDC /* EditQuestionView.swift in Sources */,
+				5A4725EE2C47ECFB00C86DDC /* AddQuestionView.swift in Sources */,
 				5ADC31332C47817200DD4669 /* Result+CoreDataClass.swift in Sources */,
 				5ADC31342C47817200DD4669 /* Result+CoreDataProperties.swift in Sources */,
+				5A4725FE2C47F2A200C86DDC /* ResultView.swift in Sources */,
 				5ADC31352C47817200DD4669 /* Student+CoreDataClass.swift in Sources */,
+				5A4725FC2C47EF5B00C86DDC /* Option+CoreDataProperties.swift in Sources */,
 				5ADC31362C47817200DD4669 /* Student+CoreDataProperties.swift in Sources */,
 				5ADC31372C47817200DD4669 /* Question+CoreDataClass.swift in Sources */,
+				5A4725EC2C47ECD900C86DDC /* AdminPanelView.swift in Sources */,
 				5ADC31382C47817200DD4669 /* Question+CoreDataProperties.swift in Sources */,
+				5A4725F22C47ED3A00C86DDC /* AddOptionView.swift in Sources */,
 				5A4725D12C47AF0F00C86DDC /* SurveyView.swift in Sources */,
 				5ADC31392C47817200DD4669 /* Answer+CoreDataClass.swift in Sources */,
 				5ADC313A2C47817200DD4669 /* Answer+CoreDataProperties.swift in Sources */,
-				5A4725D32C47AF3D00C86DDC /* ScoreView.swift in Sources */,
 				5A4725CF2C47AECD00C86DDC /* IntroductionView.swift in Sources */,
+				5A4725F62C47ED9E00C86DDC /* AudioMnager.swift in Sources */,
+				5A4725F42C47ED5500C86DDC /* EditOptionView.swift in Sources */,
 				5ADC31012C47600200DD4669 /* helth_survey.swift in Sources */,
 				5ADC31032C47600200DD4669 /* Persistence.swift in Sources */,
-				5ADC31202C4775C000DD4669 /* QuestionViewModel.swift in Sources */,
+				5A4726002C48261000C86DDC /* ImagePicker.swift in Sources */,
 				5ADC31082C47600200DD4669 /* ContentView.swift in Sources */,
-				5ADC31222C47760900DD4669 /* QuestionView.swift in Sources */,
 				5ADC31062C47600200DD4669 /* helth_survey.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

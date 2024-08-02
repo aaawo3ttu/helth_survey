@@ -1,5 +1,6 @@
 import CoreData
 
+// 永続化コントローラ
 struct PersistenceController {
     static let shared = PersistenceController()
 

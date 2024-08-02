@@ -1,6 +1,7 @@
 import SwiftUI
 import UIKit
 
+// 画像ピッカービュー
 struct ImagePicker: UIViewControllerRepresentable {
     @Binding var selectedImage: UIImage?
 

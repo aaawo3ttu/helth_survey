@@ -1,9 +1,9 @@
 import SwiftUI
+import CoreData
 
-struct ResultsView: View {
-    @Environment(\.managedObjectContext) private var viewContext
-    @FetchRequest(entity: Answer.entity(), sortDescriptors: []) private var answers: FetchedResults<Answer>
-    @Binding var currentView: ViewType
+// 結果ビュー
+struct ResultView: View {
+    @EnvironmentObject var viewModel: SurveyViewModel
     var score: Int
 
     var body: some View {
@@ -17,7 +17,7 @@ struct ResultsView: View {
                 .padding()
             
             Button(action: {
-                currentView = .introduction
+                viewModel.currentView = .introduction
             }) {
                 Text("Done")
                     .font(.title)
@@ -28,9 +28,5 @@ struct ResultsView: View {
             }
         }
         .padding()
-    }
-
-    private var totalScore: Int {
-        return answers.reduce(0) { $0 + Int($1.selectedOption?.score ?? 0) }
     }
 }

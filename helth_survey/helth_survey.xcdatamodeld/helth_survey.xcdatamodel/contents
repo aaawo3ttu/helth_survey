@@ -4,14 +4,16 @@
         <attribute name="answerData" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="answerID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="questionID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="respondentID" optional="YES" attributeType="String"/>
         <attribute name="studentID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="question" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Question" inverseName="answers" inverseEntity="Question"/>
         <relationship name="selectedOption" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Option" inverseName="answers" inverseEntity="Option"/>
         <relationship name="student" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Student" inverseName="answers" inverseEntity="Student"/>
     </entity>
     <entity name="Option" representedClassName="Option" syncable="YES">
-        <attribute name="audioPath" optional="YES" attributeType="String"/>
-        <attribute name="imageURL" optional="YES" attributeType="String"/>
+        <attribute name="audioData" optional="YES" attributeType="Binary"/>
+        <attribute name="imageData" optional="YES" attributeType="Binary"/>
         <attribute name="optionID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="score" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="text" optional="YES" attributeType="String"/>
@@ -19,8 +21,8 @@
         <relationship name="question" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Question" inverseName="options" inverseEntity="Question"/>
     </entity>
     <entity name="Question" representedClassName="Question" syncable="YES">
-        <attribute name="audioPath" optional="YES" attributeType="String"/>
-        <attribute name="imageURL" optional="YES" attributeType="String"/>
+        <attribute name="audioData" optional="YES" attributeType="Binary"/>
+        <attribute name="imageData" optional="YES" attributeType="Binary"/>
         <attribute name="questionID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="text" optional="YES" attributeType="String"/>
         <relationship name="answers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Answer" inverseName="question" inverseEntity="Answer"/>
@@ -30,7 +32,7 @@
         <attribute name="evaluationData" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="resultID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="studentsID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="totalScore" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="totalScore" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="student" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Student" inverseName="results" inverseEntity="Student"/>
     </entity>
     <entity name="Student" representedClassName="Student" syncable="YES">
@@ -38,6 +40,7 @@
         <attribute name="age" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="studentID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="timestamp" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="answers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Answer" inverseName="student" inverseEntity="Answer"/>
         <relationship name="results" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Result" inverseName="student" inverseEntity="Result"/>
     </entity>

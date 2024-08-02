@@ -6,8 +6,14 @@ struct helth_survey: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            let dataService = DataService(viewContext: persistenceController.container.viewContext)
+            let surveyViewModel = SurveyViewModel(dataService: dataService)
+            let adminViewModel = AdminViewModel(dataService: dataService)
+            
+            ContentView(surveyViewModel: surveyViewModel, adminViewModel: adminViewModel)
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
+                .environmentObject(surveyViewModel)
+                .environmentObject(adminViewModel)
         }
     }
 }

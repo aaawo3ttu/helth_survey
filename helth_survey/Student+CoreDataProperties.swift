@@ -2,7 +2,7 @@
 //  Student+CoreDataProperties.swift
 //  helth_survey
 //
-//  Created by 杉山新 on 2024/07/17.
+//  Created by 杉山新 on 2024/07/29.
 //
 //
 
@@ -20,6 +20,7 @@ extension Student {
     @NSManaged public var age: Int32
     @NSManaged public var name: String?
     @NSManaged public var studentID: UUID?
+    @NSManaged public var timestamp: Date?
     @NSManaged public var answers: NSSet?
     @NSManaged public var results: NSSet?
 

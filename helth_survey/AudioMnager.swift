@@ -1,11 +1,13 @@
 import AVFoundation
+import SwiftUI
 
-class AudioManager: ObservableObject {
+class AudioManager: NSObject, ObservableObject, AVAudioPlayerDelegate {
     var audioRecorder: AVAudioRecorder?
     var audioPlayer: AVAudioPlayer?
     @Published var isRecording = false
     @Published var isPlaying = false
 
+    // 録音を開始するメソッド
     func startRecording() {
         let audioSession = AVAudioSession.sharedInstance()
         do {
@@ -22,34 +24,46 @@ class AudioManager: ObservableObject {
             audioRecorder?.record()
             isRecording = true
         } catch {
-            // handle the error
             print("Failed to start recording: \(error.localizedDescription)")
         }
     }
 
-    func stopRecording() {
+    // 録音を停止するメソッド
+    func stopRecording() -> Data? {
         audioRecorder?.stop()
         isRecording = false
+        if let url = audioRecorder?.url, let data = try? Data(contentsOf: url) {
+            return data
+        }
+        return nil
     }
 
-    func startPlaying(url: URL) {
+    // 再生を開始するメソッド
+    func startPlaying(data: Data) {
         do {
-            audioPlayer = try AVAudioPlayer(contentsOf: url)
+            audioPlayer = try AVAudioPlayer(data: data)
+            audioPlayer?.delegate = self
             audioPlayer?.play()
             isPlaying = true
         } catch {
-            // handle the error
             print("Failed to play audio: \(error.localizedDescription)")
         }
     }
 
+    // 再生を停止するメソッド
     func stopPlaying() {
         audioPlayer?.stop()
         isPlaying = false
     }
 
+    // ドキュメントディレクトリのURLを取得するヘルパーメソッド
     private func getDocumentsDirectory() -> URL {
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
         return paths[0]
+    }
+
+    // AVAudioPlayerDelegateメソッド
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        isPlaying = false
     }
 }

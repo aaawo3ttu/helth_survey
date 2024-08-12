@@ -2,7 +2,7 @@
 //  Option+CoreDataProperties.swift
 //  helth_survey
 //
-//  Created by 杉山新 on 2024/07/22.
+//  Created by 杉山新 on 2024/08/03.
 //
 //
 
@@ -21,8 +21,9 @@ extension Option {
     @NSManaged public var optionID: UUID?
     @NSManaged public var score: Int16
     @NSManaged public var text: String?
+    @NSManaged public var orderIndex: Int16
     @NSManaged public var answers: Answer?
-    @NSManaged public var question: Question?    
+    @NSManaged public var question: Question?
 
 }
 

@@ -61,5 +61,13 @@ extension Question {
 }
 
 extension Question : Identifiable {
+    
 
+}
+
+extension Question {
+    var optionsArray: [Option] {
+        let set = options as? Set<Option> ?? []
+        return set.sorted { $0.orderIndex < $1.orderIndex } // Sort by orderIndex
+    }
 }

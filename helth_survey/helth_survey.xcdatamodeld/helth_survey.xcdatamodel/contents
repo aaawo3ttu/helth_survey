@@ -15,6 +15,7 @@
         <attribute name="audioData" optional="YES" attributeType="Binary"/>
         <attribute name="imageData" optional="YES" attributeType="Binary"/>
         <attribute name="optionID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="orderIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="score" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="text" optional="YES" attributeType="String"/>
         <relationship name="answers" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Answer" inverseName="selectedOption" inverseEntity="Answer"/>
@@ -23,6 +24,7 @@
     <entity name="Question" representedClassName="Question" syncable="YES">
         <attribute name="audioData" optional="YES" attributeType="Binary"/>
         <attribute name="imageData" optional="YES" attributeType="Binary"/>
+        <attribute name="orderIndex" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="questionID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="text" optional="YES" attributeType="String"/>
         <relationship name="answers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Answer" inverseName="question" inverseEntity="Answer"/>

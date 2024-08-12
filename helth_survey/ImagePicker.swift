@@ -1,9 +1,16 @@
 import SwiftUI
 import UIKit
 
+enum ImagePickerTarget {
+    case question
+    case option(Option)
+}
+
 // 画像ピッカービュー
 struct ImagePicker: UIViewControllerRepresentable {
-    @Binding var selectedImage: UIImage?
+    @Binding var selectedQuestionImage: UIImage?
+    @Binding var selectedOptionImage: UIImage?
+    var target: ImagePickerTarget
 
     func makeUIViewController(context: Context) -> UIImagePickerController {
         let picker = UIImagePickerController()
@@ -27,9 +34,13 @@ struct ImagePicker: UIViewControllerRepresentable {
 
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
             if let image = info[.originalImage] as? UIImage {
-                parent.selectedImage = image
+                switch parent.target {
+                case .question:
+                    parent.selectedQuestionImage = image
+                case .option:
+                    parent.selectedOptionImage = image
+                }
             }
-
             picker.dismiss(animated: true)
         }
     }

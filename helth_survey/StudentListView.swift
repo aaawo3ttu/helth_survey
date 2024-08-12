@@ -2,7 +2,7 @@ import SwiftUI
 
 // 学生のリストビュー
 struct StudentListView: View {
-    @Environment(\.managedObjectContext) private var viewContext
+    @EnvironmentObject var viewModel: SurveyViewModel
     @State private var studentScores: [Student: Int] = [:]
     @State private var selectedStudent: Student?
 
@@ -15,13 +15,13 @@ struct StudentListView: View {
 
                 List {
                     // 学生ごとのスコアを表示し、詳細ビューへのナビゲーションリンクを追加
-                    ForEach(studentScores.keys.sorted(by: { $0.name ?? "" < $1.name ?? "" }), id: \.self) { student in
+                    ForEach(studentScores.keys.sorted(by: { $0.timestamp ?? Date() < $1.timestamp ?? Date() }), id: \.self) { student in
                         HStack {
-                            Text(student.name ?? "Unknown Student")
+                            Text(formattedDate(from: student.timestamp))
                             Spacer()
                             Text("\(studentScores[student] ?? 0)")
                             // "View Details"ボタンを追加して、学生の詳細ビューに遷移するナビゲーションリンクを設定
-                            NavigationLink(destination: StudentDetailView(student: student).environment(\.managedObjectContext, viewContext)) {
+                            NavigationLink(destination: StudentDetailView(student: student).environment(\.managedObjectContext, viewModel.dataService.viewContext)) {
                                 Text("View Details")
                                     .foregroundColor(.blue)
                             }
@@ -51,15 +51,26 @@ struct StudentListView: View {
 
     // 学生ごとのスコアをロードするための関数
     private func loadScores() {
-        let dataService = DataService(viewContext: viewContext)
-        studentScores = dataService.calculateStudentScores() // データサービスを使用してスコアを計算
+        studentScores = viewModel.calculateAndSaveStudentScores() // SurveyViewModelを使用してスコアを計算
+    }
+
+    // タイムスタンプをフォーマットする関数
+    private func formattedDate(from date: Date?) -> String {
+        guard let date = date else { return "Unknown Timestamp" }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return dateFormatter.string(from: date)
     }
 }
 
 struct StudentListView_Previews: PreviewProvider {
     static var previews: some View {
-        StudentListView()
-            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+        let context = PersistenceController.preview.container.viewContext
+        let dataService = DataService(viewContext: context)
+        let viewModel = SurveyViewModel(dataService: dataService)
+
+        return StudentListView()
+            .environmentObject(viewModel)
     }
 }
 
@@ -69,15 +80,11 @@ extension StudentListView {
         let fileName = "StudentScores.csv"
         let path = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
 
-        var csvText = "Name,Score,Timestamp\n"
-
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        var csvText = "Timestamp,Score\n"
 
         for (student, score) in studentScores {
-            let timestamp = student.timestamp ?? Date()
-            let formattedDate = dateFormatter.string(from: timestamp)
-            let newLine = "\(student.name ?? "Unknown Student"),\(score),\(formattedDate)\n"
+            let formattedDate = formattedDate(from: student.timestamp)
+            let newLine = "\(formattedDate),\(score)\n"
             csvText.append(newLine)
         }
 
@@ -90,4 +97,3 @@ extension StudentListView {
         }
     }
 }
-

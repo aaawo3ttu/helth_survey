@@ -1,7 +1,8 @@
 import SwiftUI
 import CoreData
+import Foundation
 
-// アンケートビュー
+
 struct SurveyView: View {
     @Binding var currentView: ViewType
     @EnvironmentObject var viewModel: SurveyViewModel // ViewModelを使用する
@@ -19,8 +20,11 @@ struct SurveyView: View {
         VStack {
             // プログレスバー
             ProgressView(value: Double(currentQuestionIndex + 1), total: Double(viewModel.questions.count))
+                .tint(.green)
+                .frame(height: 20)
+                .scaleEffect(x: 1, y: 40, anchor: .center)
+                .clipShape(Capsule())
                 .padding()
-                .accentColor(.green) // プログレスバーを緑色に設定
 
             if currentQuestionIndex < viewModel.questions.count {
                 let question = viewModel.questions[currentQuestionIndex]
@@ -42,12 +46,16 @@ struct SurveyView: View {
                         }
                         .padding(.trailing, 10)
                     }
+                    
+                    // 質問番号
+                    Text("Q \(currentQuestionIndex + 1):")
+                        .font(.title)
+                        .padding(.trailing, 10)
 
                     Text(question.text ?? "No Question Text")
                         .font(.title)
                         .padding()
                         .foregroundColor(.black)
-                        .background(audioManager.isPlaying ? Color.blue.opacity(0.3) : Color.clear) // 再生中は背景色を変更
                 }
 
                 // 画像表示
@@ -56,13 +64,13 @@ struct SurveyView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(height: 200)
-                        .background(Color.gray.opacity(0.2)) // 画像の背景色を設定
+                        .background(Color.gray.opacity(0)) // 画像の背景色を設定
                 } else {
                     Image("sampleImage")
                         .resizable()
                         .scaledToFit()
                         .frame(height: 200)
-                        .background(Color.gray.opacity(0.2)) // 画像の背景色を設定
+                        .background(Color.gray.opacity(0.0)) // 画像の背景色を設定
                 }
 
                 // 選択肢の表示
@@ -177,6 +185,7 @@ struct SurveyView: View {
         .padding()
         .onAppear {
             viewModel.fetchQuestions() // 質問をフェッチ
+            viewModel.setStudent() // 学生をセットしてtimestampを保存
         }
     }
 

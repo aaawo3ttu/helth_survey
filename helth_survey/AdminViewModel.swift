@@ -9,6 +9,7 @@ class AdminViewModel: ObservableObject {
     @Published var isAddingQuestion = false
     @Published var isAddingOption = false
     let dataService: DataService
+    @State private var editMode: EditMode = .inactive // 管理するEditModeの状態
     
     init(dataService: DataService) {
         self.dataService = dataService
@@ -39,12 +40,8 @@ class AdminViewModel: ObservableObject {
         newQuestion.questionID = UUID()
         newQuestion.text = text
 
-        do {
-            try dataService.viewContext.save()
-            fetchQuestions()
-        } catch {
-            print("Failed to save question: \(error.localizedDescription)")
-        }
+        questions.append(newQuestion)
+        saveContext()
     }
     
     func deleteQuestion(_ question: Question) {
@@ -84,6 +81,18 @@ class AdminViewModel: ObservableObject {
         }
     }
 
+    // Save image for a question
+    func saveQuestionImage(_ image: UIImage, for question: Question) {
+        question.imageData = image.jpegData(compressionQuality: 1.0)
+        saveContext()
+    }
+
+    // Save image for an option
+    func saveOptionImage(_ image: UIImage, for option: Option) {
+        option.imageData = image.jpegData(compressionQuality: 1.0)
+        saveContext()
+    }
+    
     func saveContext() {
         do {
             try dataService.viewContext.save()

@@ -1,20 +1,27 @@
 import SwiftUI
 import CoreData
+import PhotosUI
 
 // 質問の詳細ビュー（追加と編集の統合）
 struct QuestionDetailView: View {
     @EnvironmentObject var adminViewModel: AdminViewModel // AdminViewModelを使用する
     @ObservedObject var question: Question
     @ObservedObject var audioManager = AudioManager()
-    @State private var showingImagePicker = false
-    @State private var selectedImage: UIImage?
+    
+    @State private var selectedQuestionItem: PhotosPickerItem?
+    @State private var selectedQuestionImage: UIImage?
+    
+    @State private var selectedOptionItem: PhotosPickerItem?
     @State private var selectedOptionImage: UIImage?
+    
     @State private var selectedOption: Option? // 編集対象の選択肢
     @State private var newOptionText = ""
     @State private var newOptionScore: Int16 = 0
     var isNew: Bool // 新規作成か編集かを判別
 
     var body: some View {
+        let _ = print(Self._printChanges()) // ビューが更新されるたびに変更を出力
+        
         VStack {
             Form {
                 // 質問テキストのセクション
@@ -59,13 +66,11 @@ struct QuestionDetailView: View {
                                 audioManager.startRecording()
                             }
                         }) {
-                            Image(systemName: audioManager.isRecording ? "stop.circle" : "mic.circle")
+                            Image(systemName: "mic.circle")
                                 .font(.largeTitle)
                         }
-                        
                     }
                     .buttonStyle(BorderedButtonStyle())
-
                 }
 
                 // 画像のセクション
@@ -74,27 +79,58 @@ struct QuestionDetailView: View {
                     Text("Image")
                 }) {
                     // 既存の画像データがある場合、表示する
-                    if let imageData = question.imageData, let uiImage = UIImage(data: imageData) {
-                        Image(uiImage: uiImage)
+                    if let imageData = question.imageData {
+                        let size = imageData.count
+                        let _ = print("Image data exists, size: \(size) bytes") // デバッグログ
+                        if let uiImage = UIImage(data: imageData) {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 200)
+                        } else {
+                            let _ = print("Failed to create UIImage from data") // デバッグログ
+                            Image(systemName: "photo")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 200)
+                                .foregroundColor(.gray)
+                        }
+                    } else {
+                        let _ = print("No image data available") // デバッグログ
+                        Image(systemName: "photo")
                             .resizable()
                             .scaledToFit()
                             .frame(height: 200)
+                            .foregroundColor(.gray)
                     }
+
                     // 画像ピッカーボタン
-                    Button(action: {
-                        showingImagePicker = true
-                    }) {
+                    PhotosPicker(selection: $selectedQuestionItem, matching: .images) {
                         Image(systemName: "photo.on.rectangle")
                             .font(.largeTitle)
                     }
-                    .sheet(isPresented: $showingImagePicker) {
-                        ImagePicker(selectedImage: $selectedImage)
+                    .onChange(of: selectedQuestionItem) { item in
+                        Task {
+                            if let data = try? await item?.loadTransferable(type: Data.self),
+                               let uiImage = UIImage(data: data) {
+                                selectedQuestionImage = uiImage
+                                print("Selected Question image size: \(uiImage.size), scale: \(uiImage.scale)")
+                            } else {
+                                print("No image selected or failed to load image data")
+                            }
+                        }
                     }
+
                     // 新しい画像が選択された場合、保存ボタンを表示
-                    if selectedImage != nil {
+                    if selectedQuestionImage != nil {
                         Button(action: {
-                            question.imageData = selectedImage!.jpegData(compressionQuality: 1.0)
-                            adminViewModel.saveContext()
+                            if let imageData = selectedQuestionImage?.jpegData(compressionQuality: 1.0) {
+                                print("Saving image data with size: \(imageData.count) bytes")
+                                question.imageData = imageData
+                                adminViewModel.saveContext()
+                            } else {
+                                print("Failed to convert UIImage to JPEG data")
+                            }
                         }) {
                             Image(systemName: "checkmark.circle")
                                 .font(.largeTitle)
@@ -165,7 +201,7 @@ struct QuestionDetailView: View {
                                         audioManager.startRecording()
                                     }
                                 }) {
-                                    Image(systemName: audioManager.isRecording ? "stop.circle" : "mic.circle")
+                                    Image(systemName: "mic.circle")
                                         .font(.title2)
                                 }
                             }
@@ -181,21 +217,32 @@ struct QuestionDetailView: View {
                                     .font(.title2)
                             }
 
-                            Button(action: {
-                                selectedOption = option
-                                showingImagePicker = true
-                            }) {
+                            PhotosPicker(selection: $selectedOptionItem, matching: .images) {
                                 Image(systemName: "photo.on.rectangle")
                                     .font(.title2)
                             }
-                            .sheet(isPresented: $showingImagePicker) {
-                                ImagePicker(selectedImage: $selectedOptionImage)
+                            .onChange(of: selectedOptionItem) { item in
+                                Task {
+                                    if let data = try? await item?.loadTransferable(type: Data.self),
+                                       let uiImage = UIImage(data: data) {
+                                        selectedOptionImage = uiImage
+                                        selectedOption = option
+                                        let _ = print("Selected Option image size: \(uiImage.size), scale: \(uiImage.scale)")
+                                    } else {
+                                        print("No option image selected or failed to load image data")
+                                    }
+                                }
                             }
 
                             if selectedOptionImage != nil && selectedOption == option {
                                 Button(action: {
-                                    option.imageData = selectedOptionImage!.jpegData(compressionQuality: 1.0)
-                                    adminViewModel.saveContext()
+                                    if let optionImageData = selectedOptionImage?.jpegData(compressionQuality: 1.0) {
+                                        print("Saving option image data with size: \(optionImageData.count) bytes")
+                                        option.imageData = optionImageData
+                                        adminViewModel.saveContext()
+                                    } else {
+                                        print("Failed to convert option UIImage to JPEG data")
+                                    }
                                 }) {
                                     Image(systemName: "checkmark.circle")
                                         .font(.title2)
@@ -220,6 +267,7 @@ struct QuestionDetailView: View {
                     let newOption = Option(context: adminViewModel.dataService.viewContext)
                     newOption.optionID = UUID()
                     newOption.question = question
+                    newOption.orderIndex = Int16(question.options?.count ?? 0)
                     question.addToOptions(newOption)
                     adminViewModel.saveContext()
                 }) {

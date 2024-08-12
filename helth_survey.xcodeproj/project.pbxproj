@@ -10,8 +10,8 @@
 		5A1680BE2C4CEF9600D6C4AE /* QuestionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1680BD2C4CEF9600D6C4AE /* QuestionDetailView.swift */; };
 		5A2C051E2C4E4B7E002B2FBB /* Option+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2C051C2C4E4B7E002B2FBB /* Option+CoreDataClass.swift */; };
 		5A2C051F2C4E4B7E002B2FBB /* Option+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2C051D2C4E4B7E002B2FBB /* Option+CoreDataProperties.swift */; };
-		5A2C05212C4E5816002B2FBB /* OptionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2C05202C4E5816002B2FBB /* OptionDetailView.swift */; };
 		5A2C05252C50E9C8002B2FBB /* AdminViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A2C05242C50E9C8002B2FBB /* AdminViewModel.swift */; };
+		5A35C1412C623E1E00DC0B99 /* DrawingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A35C1402C623E1E00DC0B99 /* DrawingView.swift */; };
 		5A4725CF2C47AECD00C86DDC /* IntroductionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4725CE2C47AECD00C86DDC /* IntroductionView.swift */; };
 		5A4725D12C47AF0F00C86DDC /* SurveyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4725D02C47AF0F00C86DDC /* SurveyView.swift */; };
 		5A4725EC2C47ECD900C86DDC /* AdminPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4725EB2C47ECD900C86DDC /* AdminPanelView.swift */; };
@@ -44,8 +44,8 @@
 		5A1680BD2C4CEF9600D6C4AE /* QuestionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionDetailView.swift; sourceTree = "<group>"; };
 		5A2C051C2C4E4B7E002B2FBB /* Option+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Option+CoreDataClass.swift"; path = "helth_survey/Option+CoreDataClass.swift"; sourceTree = "<group>"; };
 		5A2C051D2C4E4B7E002B2FBB /* Option+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Option+CoreDataProperties.swift"; path = "helth_survey/Option+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		5A2C05202C4E5816002B2FBB /* OptionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionDetailView.swift; sourceTree = "<group>"; };
 		5A2C05242C50E9C8002B2FBB /* AdminViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminViewModel.swift; sourceTree = "<group>"; };
+		5A35C1402C623E1E00DC0B99 /* DrawingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingView.swift; sourceTree = "<group>"; };
 		5A4725CE2C47AECD00C86DDC /* IntroductionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntroductionView.swift; sourceTree = "<group>"; };
 		5A4725D02C47AF0F00C86DDC /* SurveyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyView.swift; sourceTree = "<group>"; };
 		5A4725EB2C47ECD900C86DDC /* AdminPanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AdminPanelView.swift; path = ../AdminPanelView.swift; sourceTree = "<group>"; };
@@ -155,7 +155,7 @@
 				5A4725FD2C47F2A200C86DDC /* ResultView.swift */,
 				5A4725EB2C47ECD900C86DDC /* AdminPanelView.swift */,
 				5A1680BD2C4CEF9600D6C4AE /* QuestionDetailView.swift */,
-				5A2C05202C4E5816002B2FBB /* OptionDetailView.swift */,
+				5A35C1402C623E1E00DC0B99 /* DrawingView.swift */,
 				5A4725F52C47ED9E00C86DDC /* AudioMnager.swift */,
 				5A4725FF2C48261000C86DDC /* ImagePicker.swift */,
 				5ADC31092C47600400DD4669 /* Assets.xcassets */,
@@ -245,7 +245,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5A2C051E2C4E4B7E002B2FBB /* Option+CoreDataClass.swift in Sources */,
-				5A2C05212C4E5816002B2FBB /* OptionDetailView.swift in Sources */,
 				5A2C051F2C4E4B7E002B2FBB /* Option+CoreDataProperties.swift in Sources */,
 				5ADC31332C47817200DD4669 /* Result+CoreDataClass.swift in Sources */,
 				5A4726722C4A33D600C86DDC /* DataService.swift in Sources */,
@@ -271,6 +270,7 @@
 				5A4726002C48261000C86DDC /* ImagePicker.swift in Sources */,
 				5A47267C2C4A3A3900C86DDC /* ViewType.swift in Sources */,
 				5ADC31082C47600200DD4669 /* ContentView.swift in Sources */,
+				5A35C1412C623E1E00DC0B99 /* DrawingView.swift in Sources */,
 				5ADC31062C47600200DD4669 /* helth_survey.xcdatamodeld in Sources */,
 				5A2C05252C50E9C8002B2FBB /* AdminViewModel.swift in Sources */,
 			);
@@ -331,6 +331,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -386,6 +387,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -406,6 +408,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "このアプリは音声録音のためにマイクを使用します";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "このアプリは写真を選択するためにフォトライブラリにアクセスします。";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -416,7 +420,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.5;
@@ -444,6 +448,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "このアプリは音声録音のためにマイクを使用します";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "このアプリは写真を選択するためにフォトライブラリにアクセスします。";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -454,7 +460,7 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 14.5;

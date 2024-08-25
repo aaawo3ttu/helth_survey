@@ -2,38 +2,43 @@ import SwiftUI
 
 struct IntroductionView: View {
     @Binding var currentView: ViewType
-    @EnvironmentObject var viewModel: SurveyViewModel // ViewModelを使用する
-    
+    @EnvironmentObject var viewModel: SurveyViewModel
 
     var body: some View {
         VStack {
+            Spacer() // Adds spacing to center the button
+
             Text("Welcome to the Health Survey App")
                 .font(.largeTitle)
                 .padding()
             
-        Button(action: {
+            // Central play button for starting the survey
+            Button(action: {
                 currentView = .survey
             }) {
-                Text("Start Survey")
-                    .font(.title)
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+                Image(systemName: "play.circle.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 100, height: 100)
+                    .foregroundColor(.blue)
             }
-            .padding()
-            
-            Button(action: {
-                currentView = .admin
-            }) {
-                Text("Admin Panel")
-                    .font(.title)
-                    .padding()
-                    .background(Color.gray)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
+            .padding(.bottom, 50) // Adds spacing between the buttons
+
+            Spacer() // Continues to provide flexible spacing
+
+            // Gear icon for Admin Panel access
+            HStack {
+                Spacer() // Pushes the gear icon to the right
+                Button(action: {
+                    currentView = .admin
+                }) {
+                    Image(systemName: "gearshape.fill")
+                        .resizable()
+                        .frame(width: 40, height: 40)
+                        .foregroundColor(.gray)
+                }
+                .padding() // Padding around the button for easier tapping
             }
-            .padding()
         }
     }
 }

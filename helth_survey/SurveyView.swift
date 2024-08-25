@@ -2,7 +2,6 @@ import SwiftUI
 import CoreData
 import Foundation
 
-
 struct SurveyView: View {
     @Binding var currentView: ViewType
     @EnvironmentObject var viewModel: SurveyViewModel // ViewModelを使用する
@@ -18,6 +17,36 @@ struct SurveyView: View {
 
     var body: some View {
         VStack {
+            // ナビゲーションバー
+            HStack {
+                Text("Question \(currentQuestionIndex + 1) of \(viewModel.questions.count)")
+                    .font(.headline)
+
+                Spacer()
+
+                // ドロップダウンメニュー
+                Menu {
+                    ForEach(0..<viewModel.questions.count, id: \.self) { index in
+                        Button(action: {
+                            currentQuestionIndex = index
+                            selectedOption = selectedOptions[viewModel.questions[index].questionID!]
+                        }) {
+                            Text("Q\(index + 1): \(viewModel.questions[index].text ?? "No Question Text")")
+                                .foregroundColor(index == currentQuestionIndex ? .blue : .primary)
+                        }
+                    }
+                } label: {
+                    HStack {
+                        Text("Jump to Question")
+                        Image(systemName: "chevron.down")
+                    }
+                    .padding()
+                    .background(Color.gray.opacity(0.2))
+                    .cornerRadius(10)
+                }
+            }
+            .padding()
+
             // プログレスバー
             ProgressView(value: Double(currentQuestionIndex + 1), total: Double(viewModel.questions.count))
                 .tint(.green)
@@ -128,21 +157,6 @@ struct SurveyView: View {
 
                 // ページナビゲーションと次の質問へのボタン
                 HStack {
-                    // ページナビゲーションボタン
-                    ForEach(0..<viewModel.questions.count, id: \.self) { index in
-                        Button(action: {
-                            currentQuestionIndex = index
-                            selectedOption = selectedOptions[viewModel.questions[index].questionID!] // 選択したオプションを復元
-                        }) {
-                            Image(systemName: index == currentQuestionIndex ? "circle.fill" : (isQuestionAnswered(index: index) ? "checkmark.circle.fill" : "circle"))
-                                .foregroundColor(index == currentQuestionIndex ? .blue : .green)
-                                .font(.system(size: 20))
-                                .padding(2)
-                        }
-                    }
-
-                    Spacer()
-
                     // 次の質問へのボタン
                     Button(action: {
                         if let selectedOption = selectedOption {

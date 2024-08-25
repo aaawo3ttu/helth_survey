@@ -1,6 +1,7 @@
 import SwiftUI
 import CoreData
 import PhotosUI
+import UniformTypeIdentifiers
 
 // 質問の詳細ビュー（追加と編集の統合）
 struct QuestionDetailView: View {
@@ -17,11 +18,16 @@ struct QuestionDetailView: View {
     @State private var selectedOption: Option? // 編集対象の選択肢
     @State private var newOptionText = ""
     @State private var newOptionScore: Int16 = 0
+    
+    @State private var selectedAudioURL: URL? // 選択された質問のオーディオファイルのURL
+    @State private var selectedOptionAudioURL: URL? // 選択されたオプションのオーディオファイルのURL
+    
+    @State private var isDocumentPickerPresented = false // 質問用のドキュメントピッカー
+    @State private var isOptionDocumentPickerPresented = false // オプション用のドキュメントピッカー
+    
     var isNew: Bool // 新規作成か編集かを判別
 
     var body: some View {
-        let _ = print(Self._printChanges()) // ビューが更新されるたびに変更を出力
-        
         VStack {
             Form {
                 // 質問テキストのセクション
@@ -69,8 +75,37 @@ struct QuestionDetailView: View {
                             Image(systemName: "mic.circle")
                                 .font(.largeTitle)
                         }
+
+                        // ファイルから音声を追加するボタン
+                        Button(action: {
+                            isDocumentPickerPresented = true
+                        }) {
+                            Image(systemName: "folder")
+                                .font(.largeTitle)
+                                .foregroundColor(.blue)
+                        }
                     }
-                    .buttonStyle(BorderedButtonStyle())
+
+                    // 選択されたファイルを保存するボタンを表示
+                    if let audioURL = selectedAudioURL {
+                        Button(action: {
+                            do {
+                                let audioData = try Data(contentsOf: audioURL)
+                                question.audioData = audioData
+                                adminViewModel.saveContext()
+                                
+                                // アクセスを終了
+                                audioURL.stopAccessingSecurityScopedResource()
+                                
+                                selectedAudioURL = nil // リセット
+                            } catch {
+                                print("Failed to load audio file: \(error.localizedDescription)")
+                            }
+                        }) {
+                            Image(systemName: "checkmark.circle")
+                                .font(.largeTitle)
+                        }
+                    }
                 }
 
                 // 画像のセクション
@@ -80,15 +115,12 @@ struct QuestionDetailView: View {
                 }) {
                     // 既存の画像データがある場合、表示する
                     if let imageData = question.imageData {
-                        let size = imageData.count
-                        let _ = print("Image data exists, size: \(size) bytes") // デバッグログ
                         if let uiImage = UIImage(data: imageData) {
                             Image(uiImage: uiImage)
                                 .resizable()
                                 .scaledToFit()
                                 .frame(height: 200)
                         } else {
-                            let _ = print("Failed to create UIImage from data") // デバッグログ
                             Image(systemName: "photo")
                                 .resizable()
                                 .scaledToFit()
@@ -96,7 +128,6 @@ struct QuestionDetailView: View {
                                 .foregroundColor(.gray)
                         }
                     } else {
-                        let _ = print("No image data available") // デバッグログ
                         Image(systemName: "photo")
                             .resizable()
                             .scaledToFit()
@@ -114,9 +145,6 @@ struct QuestionDetailView: View {
                             if let data = try? await item?.loadTransferable(type: Data.self),
                                let uiImage = UIImage(data: data) {
                                 selectedQuestionImage = uiImage
-                                print("Selected Question image size: \(uiImage.size), scale: \(uiImage.scale)")
-                            } else {
-                                print("No image selected or failed to load image data")
                             }
                         }
                     }
@@ -125,11 +153,8 @@ struct QuestionDetailView: View {
                     if selectedQuestionImage != nil {
                         Button(action: {
                             if let imageData = selectedQuestionImage?.jpegData(compressionQuality: 1.0) {
-                                print("Saving image data with size: \(imageData.count) bytes")
                                 question.imageData = imageData
                                 adminViewModel.saveContext()
-                            } else {
-                                print("Failed to convert UIImage to JPEG data")
                             }
                         }) {
                             Image(systemName: "checkmark.circle")
@@ -204,6 +229,37 @@ struct QuestionDetailView: View {
                                     Image(systemName: "mic.circle")
                                         .font(.title2)
                                 }
+                                
+                                // ファイルから音声を追加するボタン
+                                Button(action: {
+                                    selectedOption = option
+                                    isOptionDocumentPickerPresented = true
+                                }) {
+                                    Image(systemName: "folder")
+                                        .font(.title2)
+                                        .foregroundColor(.blue)
+                                }
+                            }
+
+                            // 選択されたファイルを保存するボタンを表示
+                            if let optionAudioURL = selectedOptionAudioURL, selectedOption == option {
+                                Button(action: {
+                                    do {
+                                        let audioData = try Data(contentsOf: optionAudioURL)
+                                        option.audioData = audioData
+                                        adminViewModel.saveContext()
+                                        
+                                        // アクセスを終了
+                                        optionAudioURL.stopAccessingSecurityScopedResource()
+                                        
+                                        selectedOptionAudioURL = nil // リセット
+                                    } catch {
+                                        print("Failed to load audio file: \(error.localizedDescription)")
+                                    }
+                                }) {
+                                    Image(systemName: "checkmark.circle")
+                                        .font(.title2)
+                                }
                             }
 
                             if let imageData = option.imageData, let uiImage = UIImage(data: imageData) {
@@ -227,9 +283,6 @@ struct QuestionDetailView: View {
                                        let uiImage = UIImage(data: data) {
                                         selectedOptionImage = uiImage
                                         selectedOption = option
-                                        let _ = print("Selected Option image size: \(uiImage.size), scale: \(uiImage.scale)")
-                                    } else {
-                                        print("No option image selected or failed to load image data")
                                     }
                                 }
                             }
@@ -237,11 +290,8 @@ struct QuestionDetailView: View {
                             if selectedOptionImage != nil && selectedOption == option {
                                 Button(action: {
                                     if let optionImageData = selectedOptionImage?.jpegData(compressionQuality: 1.0) {
-                                        print("Saving option image data with size: \(optionImageData.count) bytes")
                                         option.imageData = optionImageData
                                         adminViewModel.saveContext()
-                                    } else {
-                                        print("Failed to convert option UIImage to JPEG data")
                                     }
                                 }) {
                                     Image(systemName: "checkmark.circle")
@@ -270,6 +320,10 @@ struct QuestionDetailView: View {
                     newOption.orderIndex = Int16(question.options?.count ?? 0)
                     question.addToOptions(newOption)
                     adminViewModel.saveContext()
+                    
+                    selectedOptionImage = nil // リセット
+                    selectedOptionItem = nil  // リセット
+                    selectedOption = nil      // リセット
                 }) {
                     HStack {
                         Image(systemName: "plus.circle")
@@ -284,8 +338,53 @@ struct QuestionDetailView: View {
             }
             .buttonStyle(BorderedButtonStyle())
         }
-        // ビューのタイトルを設定する
         .navigationBarTitle(isNew ? "Add Question" : "Edit Question", displayMode: .inline)
+        .sheet(isPresented: $isDocumentPickerPresented) {
+            DocumentPicker(document: $selectedAudioURL)
+        }
+        .sheet(isPresented: $isOptionDocumentPickerPresented) {
+            DocumentPicker(document: $selectedOptionAudioURL)
+        }
+    }
+}
+
+// DocumentPickerのカスタムビュー（既存のまま）
+struct DocumentPicker: UIViewControllerRepresentable {
+    @Binding var document: URL?
+
+    func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [.audio])
+        picker.delegate = context.coordinator
+        return picker
+    }
+
+    func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {}
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+
+    class Coordinator: NSObject, UIDocumentPickerDelegate {
+        var parent: DocumentPicker
+
+        init(_ parent: DocumentPicker) {
+            self.parent = parent
+        }
+
+        func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+            guard let url = urls.first else { return }
+
+            // セキュリティスコープリソースのアクセスを開始
+            if url.startAccessingSecurityScopedResource() {
+                parent.document = url
+            } else {
+                print("Failed to access security-scoped resource.")
+            }
+        }
+
+        func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
+            parent.document = nil
+        }
     }
 }
 

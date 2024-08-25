@@ -13,9 +13,13 @@ struct StudentDetailView: View {
                 .padding()
 
             List {
-                // 学生の各回答を表示
+                // 学生の各回答を問題番号順に表示
                 if let answers = student.answers as? Set<Answer> {
-                    ForEach(Array(answers), id: \.self) { answer in
+                    let sortedAnswers = Array(answers).sorted {
+                        ($0.question?.orderIndex ?? 0) < ($1.question?.orderIndex ?? 0)
+                    }
+                    
+                    ForEach(sortedAnswers, id: \.self) { answer in
                         VStack(alignment: .leading) {
                             Text(answer.question?.text ?? "Unknown Question")
                                 .font(.headline)
@@ -41,6 +45,7 @@ struct StudentDetailView_Previews: PreviewProvider {
         
         let question = Question(context: context)
         question.text = "Sample Question"
+        question.orderIndex = 1
         
         let option = Option(context: context)
         option.text = "Sample Option"

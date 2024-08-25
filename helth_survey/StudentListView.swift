@@ -27,6 +27,7 @@ struct StudentListView: View {
                             }
                         }
                     }
+                    .onDelete(perform: deleteStudent) // スワイプで削除する機能を追加
                 }
                 .onAppear(perform: loadScores) // ビューが表示されたときにスコアをロード
 
@@ -60,6 +61,15 @@ struct StudentListView: View {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         return dateFormatter.string(from: date)
+    }
+
+    // 学生を削除する関数
+    private func deleteStudent(at offsets: IndexSet) {
+        offsets.forEach { index in
+            let student = studentScores.keys.sorted(by: { $0.timestamp ?? Date() < $1.timestamp ?? Date() })[index]
+            viewModel.deleteStudent(student)
+            studentScores.removeValue(forKey: student)
+        }
     }
 }
 

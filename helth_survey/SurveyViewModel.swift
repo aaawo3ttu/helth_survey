@@ -59,6 +59,16 @@ class SurveyViewModel: ObservableObject {
         }
     }
     
+    func deleteStudent(_ student: Student) {
+            dataService.viewContext.delete(student)
+            
+            do {
+                try dataService.viewContext.save() // 削除を保存
+            } catch {
+                print("Failed to delete student: \(error.localizedDescription)")
+            }
+        }
+    
     func addQuestion(text: String) {
         let newQuestion = Question(context: dataService.viewContext)
         newQuestion.questionID = UUID()

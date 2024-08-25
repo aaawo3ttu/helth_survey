@@ -2,7 +2,7 @@
 //  Question+CoreDataProperties.swift
 //  helth_survey
 //
-//  Created by 杉山新 on 2024/08/03.
+//  Created by 杉山新 on 2024/08/26.
 //
 //
 
@@ -18,9 +18,9 @@ extension Question {
 
     @NSManaged public var audioData: Data?
     @NSManaged public var imageData: Data?
+    @NSManaged public var orderIndex: Int16
     @NSManaged public var questionID: UUID?
     @NSManaged public var text: String?
-    @NSManaged public var orderIndex: Int16
     @NSManaged public var answers: NSSet?
     @NSManaged public var options: NSSet?
 
@@ -61,13 +61,5 @@ extension Question {
 }
 
 extension Question : Identifiable {
-    
 
-}
-
-extension Question {
-    var optionsArray: [Option] {
-        let set = options as? Set<Option> ?? []
-        return set.sorted { $0.orderIndex < $1.orderIndex } // Sort by orderIndex
-    }
 }

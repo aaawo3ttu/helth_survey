@@ -2,7 +2,7 @@
 //  Result+CoreDataProperties.swift
 //  helth_survey
 //
-//  Created by 杉山新 on 2024/07/29.
+//  Created by 杉山新 on 2024/08/26.
 //
 //
 

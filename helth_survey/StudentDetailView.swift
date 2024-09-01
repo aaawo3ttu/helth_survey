@@ -19,9 +19,10 @@ struct StudentDetailView: View {
                         ($0.question?.orderIndex ?? 0) < ($1.question?.orderIndex ?? 0)
                     }
                     
-                    ForEach(sortedAnswers, id: \.self) { answer in
+                    ForEach(sortedAnswers.indices, id: \.self) { index in
+                        let answer = sortedAnswers[index]
                         VStack(alignment: .leading) {
-                            Text(answer.question?.text ?? "Unknown Question")
+                            Text("Q\(index + 1): \(answer.question?.text ?? "Unknown Question")")
                                 .font(.headline)
                             Text("Selected Option: \(answer.selectedOption?.text ?? "None")")
                             Text("Score: \(answer.selectedOption?.score ?? 0)")

@@ -19,11 +19,13 @@ struct QuestionDetailView: View {
     @State private var newOptionText = ""
     @State private var newOptionScore: Int16 = 0
     
-    @State private var selectedAudioURL: URL? // 選択された質問のオーディオファイルのURL
-    @State private var selectedOptionAudioURL: URL? // 選択されたオプションのオーディオファイルのURL
+    @State private var selectedAudioURL: URL? // 質問用のオーディオファイルのURL
+    @State private var selectedOptionAudioURL: URL? // オプション用のオーディオファイルのURL
     
     @State private var isDocumentPickerPresented = false // 質問用のドキュメントピッカー
     @State private var isOptionDocumentPickerPresented = false // オプション用のドキュメントピッカー
+    
+    @State private var editMode: EditMode = .inactive // 編集モードの状態管理
     
     var isNew: Bool // 新規作成か編集かを判別
 
@@ -47,7 +49,6 @@ struct QuestionDetailView: View {
                     Text("Audio")
                 }) {
                     HStack {
-                        // 既存の音声データがある場合、再生・停止ボタンを表示
                         Button(action: {
                             if audioManager.isPlaying {
                                 audioManager.stopPlaying()
@@ -61,7 +62,6 @@ struct QuestionDetailView: View {
                         }
                         .disabled(question.audioData == nil)
 
-                        // 録音・停止ボタンを表示
                         Button(action: {
                             if audioManager.isRecording {
                                 if let recordedData = audioManager.stopRecording() {
@@ -76,7 +76,6 @@ struct QuestionDetailView: View {
                                 .font(.largeTitle)
                         }
 
-                        // ファイルから音声を追加するボタン
                         Button(action: {
                             isDocumentPickerPresented = true
                         }) {
@@ -86,7 +85,6 @@ struct QuestionDetailView: View {
                         }
                     }
 
-                    // 選択されたファイルを保存するボタンを表示
                     if let audioURL = selectedAudioURL {
                         Button(action: {
                             do {
@@ -94,10 +92,8 @@ struct QuestionDetailView: View {
                                 question.audioData = audioData
                                 adminViewModel.saveContext()
                                 
-                                // アクセスを終了
                                 audioURL.stopAccessingSecurityScopedResource()
-                                
-                                selectedAudioURL = nil // リセット
+                                selectedAudioURL = nil
                             } catch {
                                 print("Failed to load audio file: \(error.localizedDescription)")
                             }
@@ -113,7 +109,6 @@ struct QuestionDetailView: View {
                     Image(systemName: "photo")
                     Text("Image")
                 }) {
-                    // 既存の画像データがある場合、表示する
                     if let imageData = question.imageData {
                         if let uiImage = UIImage(data: imageData) {
                             Image(uiImage: uiImage)
@@ -135,7 +130,6 @@ struct QuestionDetailView: View {
                             .foregroundColor(.gray)
                     }
 
-                    // 画像ピッカーボタン
                     PhotosPicker(selection: $selectedQuestionItem, matching: .images) {
                         Image(systemName: "photo.on.rectangle")
                             .font(.largeTitle)
@@ -149,12 +143,12 @@ struct QuestionDetailView: View {
                         }
                     }
 
-                    // 新しい画像が選択された場合、保存ボタンを表示
                     if selectedQuestionImage != nil {
                         Button(action: {
                             if let imageData = selectedQuestionImage?.jpegData(compressionQuality: 1.0) {
                                 question.imageData = imageData
                                 adminViewModel.saveContext()
+                                selectedQuestionImage = nil // リセット
                             }
                         }) {
                             Image(systemName: "checkmark.circle")
@@ -163,7 +157,6 @@ struct QuestionDetailView: View {
                     }
                 }
 
-                // 質問の追加または変更を保存するセクション
                 Section {
                     Button(action: {
                         adminViewModel.saveContext()
@@ -182,7 +175,7 @@ struct QuestionDetailView: View {
             }
             .buttonStyle(BorderedButtonStyle())
 
-            // 選択肢のリスト表示と管理セクション
+            // オプションの並べ替えを可能にしたリスト
             List {
                 ForEach(question.optionsArray, id: \.self) { option in
                     VStack {
@@ -201,7 +194,6 @@ struct QuestionDetailView: View {
                             .frame(width: 60)
 
                             HStack {
-                                // 既存の音声データがある場合、再生・停止ボタンを表示
                                 Button(action: {
                                     if audioManager.isPlaying {
                                         audioManager.stopPlaying()
@@ -215,7 +207,6 @@ struct QuestionDetailView: View {
                                 }
                                 .disabled(option.audioData == nil)
 
-                                // 録音・停止ボタンを表示
                                 Button(action: {
                                     if audioManager.isRecording {
                                         if let recordedData = audioManager.stopRecording() {
@@ -230,7 +221,6 @@ struct QuestionDetailView: View {
                                         .font(.title2)
                                 }
                                 
-                                // ファイルから音声を追加するボタン
                                 Button(action: {
                                     selectedOption = option
                                     isOptionDocumentPickerPresented = true
@@ -241,7 +231,6 @@ struct QuestionDetailView: View {
                                 }
                             }
 
-                            // 選択されたファイルを保存するボタンを表示
                             if let optionAudioURL = selectedOptionAudioURL, selectedOption == option {
                                 Button(action: {
                                     do {
@@ -249,10 +238,8 @@ struct QuestionDetailView: View {
                                         option.audioData = audioData
                                         adminViewModel.saveContext()
                                         
-                                        // アクセスを終了
                                         optionAudioURL.stopAccessingSecurityScopedResource()
-                                        
-                                        selectedOptionAudioURL = nil // リセット
+                                        selectedOptionAudioURL = nil
                                     } catch {
                                         print("Failed to load audio file: \(error.localizedDescription)")
                                     }
@@ -292,6 +279,8 @@ struct QuestionDetailView: View {
                                     if let optionImageData = selectedOptionImage?.jpegData(compressionQuality: 1.0) {
                                         option.imageData = optionImageData
                                         adminViewModel.saveContext()
+                                        selectedOptionImage = nil // リセット
+                                        selectedOption = nil // リセット
                                     }
                                 }) {
                                     Image(systemName: "checkmark.circle")
@@ -308,43 +297,59 @@ struct QuestionDetailView: View {
                         }
                     }
                 }
+                .onMove(perform: moveOption)
                 .onDelete(perform: { indexSet in
                     indexSet.map { question.optionsArray[$0] }.forEach(adminViewModel.deleteOption)
                 })
-
-                // 選択肢の追加ボタンをリストの一番下に配置
-                Button(action: {
-                    let newOption = Option(context: adminViewModel.dataService.viewContext)
-                    newOption.optionID = UUID()
-                    newOption.question = question
-                    newOption.orderIndex = Int16(question.options?.count ?? 0)
-                    question.addToOptions(newOption)
-                    adminViewModel.saveContext()
-                    
-                    selectedOptionImage = nil // リセット
-                    selectedOptionItem = nil  // リセット
-                    selectedOption = nil      // リセット
-                }) {
-                    HStack {
-                        Image(systemName: "plus.circle")
-                        Text("Add Option")
-                    }
-                    .font(.title)
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-                }
             }
             .buttonStyle(BorderedButtonStyle())
+            .environment(\.editMode, $editMode) // 編集モードをバインド
+            
+            Button(action: {
+                let newOption = Option(context: adminViewModel.dataService.viewContext)
+                newOption.optionID = UUID()
+                newOption.question = question
+                newOption.orderIndex = Int16(question.optionsArray.count) // 常に最後に追加
+                question.addToOptions(newOption)
+                adminViewModel.saveContext()
+                
+                selectedOptionImage = nil // リセット
+                selectedOptionItem = nil  // リセット
+                selectedOption = nil      // リセット
+            }) {
+                HStack {
+                    Image(systemName: "plus.circle")
+                    Text("Add Option")
+                }
+                .font(.title)
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+            }
         }
+        .buttonStyle(BorderlessButtonStyle())
         .navigationBarTitle(isNew ? "Add Question" : "Edit Question", displayMode: .inline)
+        .navigationBarItems(trailing: EditButton()) // 編集ボタンを追加
         .sheet(isPresented: $isDocumentPickerPresented) {
             DocumentPicker(document: $selectedAudioURL)
         }
         .sheet(isPresented: $isOptionDocumentPickerPresented) {
             DocumentPicker(document: $selectedOptionAudioURL)
         }
+    }
+
+    // オプションの順序を変更する関数
+    private func moveOption(from source: IndexSet, to destination: Int) {
+        var revisedOptions = question.optionsArray
+
+        revisedOptions.move(fromOffsets: source, toOffset: destination)
+
+        // 並べ替え後の順序を保存
+        for (index, option) in revisedOptions.enumerated() {
+            option.orderIndex = Int16(index)
+        }
+        adminViewModel.saveContext()
     }
 }
 
@@ -374,7 +379,6 @@ struct DocumentPicker: UIViewControllerRepresentable {
         func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
             guard let url = urls.first else { return }
 
-            // セキュリティスコープリソースのアクセスを開始
             if url.startAccessingSecurityScopedResource() {
                 parent.document = url
             } else {

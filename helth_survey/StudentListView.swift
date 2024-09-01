@@ -1,12 +1,15 @@
 import SwiftUI
+import CoreData
 
 // 学生のリストビュー
 struct StudentListView: View {
     @EnvironmentObject var viewModel: SurveyViewModel
     @State private var studentScores: [Student: Int] = [:]
     @State private var selectedStudent: Student?
+    @State private var csvURL: URL?
 
     var body: some View {
+        
         NavigationView {
             VStack {
                 Text("Student Scores")
@@ -31,22 +34,20 @@ struct StudentListView: View {
                 }
                 .onAppear(perform: loadScores) // ビューが表示されたときにスコアをロード
 
-                // ShareLink を使用してエクスポートボタンを追加
-                if let csvURL = createCSV() {
-                    ShareLink(item: csvURL, preview: SharePreview("Student Scores", image: Image(systemName: "doc.on.doc"))) {
-                        HStack {
-                            Image(systemName: "square.and.arrow.up")
-                            Text("Export CSV")
-                        }
+                // CSVエクスポートボタンを追加
+                if let csvURL = csvURL {
+                    ShareLink("Export CSV", item: csvURL)
                         .font(.title2)
                         .padding()
                         .background(Color.blue)
                         .foregroundColor(.white)
                         .cornerRadius(10)
-                    }
                 }
             }
             .navigationTitle("Students")
+            .onAppear {
+                csvURL = createCSV() // ビューが表示されたときにCSVを作成
+            }
         }
     }
 
@@ -71,6 +72,55 @@ struct StudentListView: View {
             studentScores.removeValue(forKey: student)
         }
     }
+
+    // CSVファイルを作成して保存する関数
+    func createCSV() -> URL? {
+        let fileName = "StudentScores.csv"
+        let path = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
+
+        var csvText = "Timestamp,Student,Question,Answer,Score\n"
+
+        let students = fetchStudents()
+
+        for student in students {
+            let formattedDate = formattedDate(from: student.timestamp)
+            let studentName = student.name ?? "Unknown Student"
+
+            if let answers = student.answers as? Set<Answer> {
+                for answer in answers.sorted(by: { $0.question?.orderIndex ?? 0 < $1.question?.orderIndex ?? 0 }) {
+                    let questionText = answer.question?.text ?? "Unknown Question"
+                    let answerText = answer.selectedOption?.text ?? "No Answer"
+                    let answerScore = answer.selectedOption?.score ?? 0
+
+                    let newLine = "\(formattedDate),\(studentName),\"\(questionText)\",\"\(answerText)\",\(answerScore)\n"
+                    csvText.append(newLine)
+                }
+            }
+        }
+
+        do {
+            try csvText.write(to: path, atomically: true, encoding: .utf8)
+            print("CSV created successfully at \(path)")
+            return path
+        } catch {
+            print("Failed to create CSV file: \(error.localizedDescription)")
+            return nil
+        }
+    }
+
+    // Core DataからStudentデータをフェッチする関数
+    private func fetchStudents() -> [Student] {
+        let fetchRequest: NSFetchRequest<Student> = Student.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: true)]
+        
+        do {
+            let students = try viewModel.dataService.viewContext.fetch(fetchRequest)
+            return students
+        } catch {
+            print("Failed to fetch students: \(error.localizedDescription)")
+            return []
+        }
+    }
 }
 
 struct StudentListView_Previews: PreviewProvider {
@@ -81,29 +131,5 @@ struct StudentListView_Previews: PreviewProvider {
 
         return StudentListView()
             .environmentObject(viewModel)
-    }
-}
-
-extension StudentListView {
-    // CSVファイルを作成して保存する関数
-    func createCSV() -> URL? {
-        let fileName = "StudentScores.csv"
-        let path = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
-
-        var csvText = "Timestamp,Score\n"
-
-        for (student, score) in studentScores {
-            let formattedDate = formattedDate(from: student.timestamp)
-            let newLine = "\(formattedDate),\(score)\n"
-            csvText.append(newLine)
-        }
-
-        do {
-            try csvText.write(to: path, atomically: true, encoding: .utf8)
-            return path
-        } catch {
-            print("Failed to create CSV file: \(error.localizedDescription)")
-            return nil
-        }
     }
 }

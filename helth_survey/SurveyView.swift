@@ -148,7 +148,6 @@ struct SurveyView: View {
                 .padding()
                 .onAppear {
                     selectedOption = selectedOptions[question.questionID!] // 選択したオプションを復元
-                    playQuestionAudio(question: question) // 問題遷移時に音声を再生
                 }
                 .onChange(of: currentQuestionIndex) { newValue in
                     let question = viewModel.questions[newValue]
@@ -200,6 +199,7 @@ struct SurveyView: View {
         .onAppear {
             viewModel.fetchQuestions() // 質問をフェッチ
             viewModel.setStudent() // 学生をセットしてtimestampを保存
+
         }
     }
 
@@ -222,77 +222,22 @@ struct SurveyView: View {
     }
 }
 
-// プレビューの追加
-struct SurveyView_Previews: PreviewProvider {
-    static var previews: some View {
-        let context = PersistenceController.preview.container.viewContext
-        let dataService = DataService(viewContext: context)
-        let viewModel = SurveyViewModel(dataService: dataService)
+struct DidAppearModifier: ViewModifier {
+    let action: () -> Void
 
-        // デモ用の質問と選択肢を追加
-        let question = createSampleQuestion(context: context)
-
-        viewModel.questions = [question]
-
-        return SurveyView(currentView: .constant(.survey))
-            .environment(\.managedObjectContext, context)
-            .environmentObject(viewModel)
+    func body(content: Content) -> some View {
+        content
+            .background(
+                GeometryReader { _ in
+                    Color.clear
+                        .onAppear(perform: action)
+                }
+            )
     }
+}
 
-    static func createSampleQuestion(context: NSManagedObjectContext) -> Question {
-        let question = Question(context: context)
-        question.questionID = UUID()
-        question.text = "Sample Question"
-        question.imageData = UIImage(systemName: "photo")?.jpegData(compressionQuality: 1.0)
-        if let audioURL = Bundle.main.url(forResource: "sampleAudio", withExtension: "mp3") {
-            question.audioData = try? Data(contentsOf: audioURL)
-        }
-
-        let option1 = Option(context: context)
-        option1.optionID = UUID()
-        option1.text = "Always"
-        option1.score = 30
-        option1.imageData = UIImage(named: "AlwaysImage")?.jpegData(compressionQuality: 1.0)
-        if let audioURL = Bundle.main.url(forResource: "AlwaysAudio", withExtension: "mp3") {
-            option1.audioData = try? Data(contentsOf: audioURL)
-        }
-        option1.question = question
-
-        let option2 = Option(context: context)
-        option2.optionID = UUID()
-        option2.text = "Often"
-        option2.score = 20
-        option2.imageData = UIImage(named: "OftenImage")?.jpegData(compressionQuality: 1.0)
-        if let audioURL = Bundle.main.url(forResource: "OftenAudio", withExtension: "mp3") {
-            option2.audioData = try? Data(contentsOf: audioURL)
-        }
-        option2.question = question
-
-        let option3 = Option(context: context)
-        option3.optionID = UUID()
-        option3.text = "Sometimes"
-        option3.score = 10
-        option3.imageData = UIImage(named: "SometimesImage")?.jpegData(compressionQuality: 1.0)
-        if let audioURL = Bundle.main.url(forResource: "SometimesAudio", withExtension: "mp3") {
-            option3.audioData = try? Data(contentsOf: audioURL)
-        }
-        option3.question = question
-
-        let option4 = Option(context: context)
-        option4.optionID = UUID()
-        option4.text = "Never"
-        option4.score = 0
-        option4.imageData = UIImage(named: "NeverImage")?.jpegData(compressionQuality: 1.0)
-        if let audioURL = Bundle.main.url(forResource: "NeverAudio", withExtension: "mp3") {
-            option4.audioData = try? Data(contentsOf: audioURL)
-        }
-        option4.question = question
-
-        question.addToOptions(option1)
-        question.addToOptions(option2)
-        question.addToOptions(option3)
-        question.addToOptions(option4)
-
-        return question
+extension View {
+    func onDidAppear(_ perform: @escaping () -> Void) -> some View {
+        self.modifier(DidAppearModifier(action: perform))
     }
 }

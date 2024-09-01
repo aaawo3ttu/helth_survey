@@ -1,5 +1,6 @@
 import SwiftUI
 import CoreData
+import PhotosUI
 
 class SurveyViewModel: ObservableObject {
     @Published var currentView: ViewType = .introduction
@@ -95,7 +96,7 @@ class SurveyViewModel: ObservableObject {
         newOption.audioData = audioData
         newOption.question = question
         newOption.orderIndex = Int16(question.optionsArray.count) // 新しい選択肢の順序を末尾に設定
-        
+
         do {
             try dataService.viewContext.save()
             fetchAllOptions()
@@ -169,6 +170,108 @@ class SurveyViewModel: ObservableObject {
             try dataService.viewContext.save()
         } catch {
             print("Failed to save context: \(error.localizedDescription)")
+        }
+    }
+}
+
+struct OptionsList: View {
+    var options: [Option]
+    @ObservedObject var audioManager: AudioManager
+    @EnvironmentObject var adminViewModel: AdminViewModel
+
+    var body: some View {
+        List {
+            ForEach(options.sorted(by: { $0.orderIndex < $1.orderIndex }), id: \.optionID) { option in
+                OptionRow(option: option, audioManager: audioManager)
+            }
+            .onDelete(perform: deleteOption)
+        }
+    }
+
+    private func deleteOption(at offsets: IndexSet) {
+        offsets.map { options[$0] }.forEach(adminViewModel.deleteOption)
+    }
+}
+
+struct OptionRow: View {
+    @ObservedObject var option: Option
+    @ObservedObject var audioManager: AudioManager
+    @EnvironmentObject var adminViewModel: AdminViewModel
+
+    @State private var selectedOptionItem: PhotosPickerItem?
+    @State private var selectedOptionImage: UIImage?
+
+    var body: some View {
+        VStack {
+            HStack {
+                TextField("Option text", text: Binding(
+                    get: { option.text ?? "" },
+                    set: { option.text = $0 }
+                ))
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+
+                TextField("Score", value: $option.score, formatter: NumberFormatter())
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .frame(width: 60)
+
+                AudioButton(option: option, audioManager: audioManager)
+                ImagePickerButton(selectedOptionItem: $selectedOptionItem, selectedOptionImage: $selectedOptionImage, option: option)
+            }
+            if let uiImage = selectedOptionImage {
+                Image(uiImage: uiImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 40, height: 40)
+                    .cornerRadius(5)
+            }
+            Button("Save Changes") {
+                if let imageData = selectedOptionImage?.jpegData(compressionQuality: 1.0) {
+                    option.imageData = imageData
+                    adminViewModel.saveContext()
+                    selectedOptionImage = nil
+                }
+            }
+        }
+    }
+}
+
+struct AudioButton: View {
+    @ObservedObject var option: Option
+    @ObservedObject var audioManager: AudioManager
+
+    var body: some View {
+        Button(action: {
+            if audioManager.isPlaying {
+                audioManager.stopPlaying()
+            } else if let data = option.audioData {
+                audioManager.startPlaying(data: data)
+            }
+        }) {
+            Image(systemName: audioManager.isPlaying ? "stop.circle" : "play.circle")
+                .font(.title2)
+                .foregroundColor(option.audioData == nil ? .gray : .blue)
+        }
+        .disabled(option.audioData == nil)
+    }
+}
+
+struct ImagePickerButton: View {
+    @Binding var selectedOptionItem: PhotosPickerItem?
+    @Binding var selectedOptionImage: UIImage?
+    @ObservedObject var option: Option
+
+    var body: some View {
+        PhotosPicker(selection: $selectedOptionItem, matching: .images) {
+            Image(systemName: "photo.on.rectangle")
+                .font(.title2)
+        }
+        .onChange(of: selectedOptionItem) { item in
+            Task {
+                if let data = try? await item?.loadTransferable(type: Data.self),
+                   let uiImage = UIImage(data: data) {
+                    selectedOptionImage = uiImage
+                }
+            }
         }
     }
 }
